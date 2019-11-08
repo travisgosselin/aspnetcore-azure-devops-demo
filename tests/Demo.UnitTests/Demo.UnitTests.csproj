@@ -11,4 +11,8 @@
     <PackageReference Include="MSTest.TestFramework" Version="1.2.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Demo.Web\Demo.Web.csproj" />
+  </ItemGroup>
+
 </Project>
