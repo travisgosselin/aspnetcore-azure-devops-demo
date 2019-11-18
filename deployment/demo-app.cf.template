@@ -1,0 +1,79 @@
+{
+    "AWSTemplateFormatVersion" : "2010-09-09",
+    "Description" : "Demo web app deployment in AWS for dev-ops meetup.",
+    "Resources" : {
+        "Application": {
+			"Type": "AWS::ElasticBeanstalk::Application",
+			"Properties": {
+				"ApplicationName": "dev-meetup-demo-web-app",
+				"Description": "Demo web application for deployment from Azure DevOps."
+			}
+		},
+        "EnvironmentOne": {
+            "Type": "AWS::ElasticBeanstalk::Environment",
+            "Properties": {
+              "ApplicationName": { "Ref": "Application" },
+              "CNAMEPrefix": "meetup-demo-web-app-staging",
+              "EnvironmentName": "app-one",
+              "Description": "AWS Elastic Beanstalk demo deploy from azure devops.",
+              "SolutionStackName": "64bit Windows Server 2016 v1.2.0 running IIS 10.0",
+              "OptionSettings": [
+                {
+                  "Namespace": "aws:autoscaling:launchconfiguration",
+                  "OptionName": "IamInstanceProfile",
+                  "Value": { "Ref": "InstanceProfile" }
+                },
+                {
+                  "Namespace": "aws:elasticbeanstalk:environment",
+                  "OptionName": "ServiceRole",
+                  "Value": "aws-elasticbeanstalk-service-role"
+                }
+              ]
+            }
+        },
+        "EnvironmentTwo": {
+            "Type": "AWS::ElasticBeanstalk::Environment",
+            "Properties": {
+              "ApplicationName": { "Ref": "Application" },
+              "CNAMEPrefix": "meetup-demo-web-app",
+              "EnvironmentName": "app-two",
+              "Description": "AWS Elastic Beanstalk demo deploy from azure devops.",
+              "SolutionStackName": "64bit Windows Server 2016 v1.2.0 running IIS 10.0",
+              "OptionSettings": [
+                {
+                  "Namespace": "aws:autoscaling:launchconfiguration",
+                  "OptionName": "IamInstanceProfile",
+                  "Value": { "Ref": "InstanceProfile" }
+                },
+                {
+                  "Namespace": "aws:elasticbeanstalk:environment",
+                  "OptionName": "ServiceRole",
+                  "Value": "aws-elasticbeanstalk-service-role"
+                }
+              ]
+            }
+        },
+        "InstanceProfileRole" : {
+			"Type": "AWS::IAM::Role",
+			"Properties": {
+                "AssumeRolePolicyDocument": {
+					"Version" : "2012-10-17",
+					"Statement": [ {
+						"Effect": "Allow",
+						"Principal": { "Service": [ "ec2.amazonaws.com" ] },
+						"Action": [ "sts:AssumeRole" ]
+					 } ]
+				},
+				"ManagedPolicyArns": [ "arn:aws:iam::aws:policy/AWSElasticBeanstalkWebTier" ]
+			}
+		},
+        "InstanceProfile": {
+            "Type": "AWS::IAM::InstanceProfile",
+            "Properties": {
+              "Roles": [
+                { "Ref": "InstanceProfileRole" }
+              ]
+            }
+        }
+	}
+}
