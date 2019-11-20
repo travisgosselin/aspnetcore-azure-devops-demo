@@ -20,20 +20,19 @@ pool:
 steps:
 - task: update-net-core-package-info@0
   displayName: 'Update Version'
-  condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+  condition: eq(variables['Build.SourceBranch'], 'refs/heads/container-app')
 
 - task: UpdateBuildNumber@0
   displayName: 'update build number when pr'
   inputs:
     buildNumber: $(Build.SourceBranchName)-$(Build.BuildId)
-  condition: ne(variables['Build.SourceBranch'], 'refs/heads/master')
+  condition: ne(variables['Build.SourceBranch'], 'refs/heads/container-app')
 
 - task: Docker@0
   displayName: 'build image'
   inputs:
     azureSubscription: 'Free Trial (af5dba18-48a5-444e-bcbe-d9749bf60ec2)'
     azureContainerRegistry: '{"loginServer":"meetupdemo.azurecr.io", "id" : "/subscriptions/af5dba18-48a5-444e-bcbe-d9749bf60ec2/resourceGroups/devops-demo/providers/Microsoft.ContainerRegistry/registries/meetupdemo"}'
-    includeLatestTag: true
 
 - task: Docker@0
   displayName: 'push image'
@@ -41,5 +40,7 @@ steps:
     azureSubscription: 'Free Trial (af5dba18-48a5-444e-bcbe-d9749bf60ec2)'
     azureContainerRegistry: '{"loginServer":"meetupdemo.azurecr.io", "id" : "/subscriptions/af5dba18-48a5-444e-bcbe-d9749bf60ec2/resourceGroups/devops-demo/providers/Microsoft.ContainerRegistry/registries/meetupdemo"}'
     action: 'Push an image'
+    additionalImageTags: '$(Build.BuildNumber)'
     includeSourceTags: true
     includeLatestTag: true
+  condition: eq(variables['Build.SourceBranch'], 'refs/heads/container-app')
