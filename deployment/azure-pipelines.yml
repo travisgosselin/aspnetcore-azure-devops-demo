@@ -16,7 +16,12 @@ pr:
       - container-app
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: 'ubuntu-16.04'
+
+container: ubuntu:16.04
+
+variables:
+- group: meetup-variables
 
 steps:
 - task: update-net-core-package-info@0
@@ -34,6 +39,7 @@ steps:
   inputs:
     azureSubscription: 'Free Trial (af5dba18-48a5-444e-bcbe-d9749bf60ec2)'
     azureContainerRegistry: '{"loginServer":"meetupdemo.azurecr.io", "id" : "/subscriptions/af5dba18-48a5-444e-bcbe-d9749bf60ec2/resourceGroups/devops-demo/providers/Microsoft.ContainerRegistry/registries/meetupdemo"}'
+    imageName: '$(MeetupImage):$(Build.BuildId)'
     additionalImageTags: '$(Build.BuildNumber)'
     includeLatestTag: true
 
@@ -43,6 +49,7 @@ steps:
     azureSubscription: 'Free Trial (af5dba18-48a5-444e-bcbe-d9749bf60ec2)'
     azureContainerRegistry: '{"loginServer":"meetupdemo.azurecr.io", "id" : "/subscriptions/af5dba18-48a5-444e-bcbe-d9749bf60ec2/resourceGroups/devops-demo/providers/Microsoft.ContainerRegistry/registries/meetupdemo"}'
     action: 'Push an image'
+    imageName: '$(MeetupImage):$(Build.BuildId)'
     additionalImageTags: '$(Build.BuildNumber)'
     includeSourceTags: true
     includeLatestTag: true
