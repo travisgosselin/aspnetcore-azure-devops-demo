@@ -12,10 +12,10 @@ trigger:
 pr:
   branches:
     include:
-      - master
+      - container-app
 
 pool:
-  name: Azure Pipelines
+  vmImage: 'ubuntu-latest'
 
 steps:
 - task: update-net-core-package-info@0
