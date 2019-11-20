@@ -60,6 +60,35 @@
             ],
             "problemMatcher": "$msCompile",
             "group": "build"
+        },
+        {
+            "label": "docker build",
+            "command": "docker",
+            "type": "shell",
+            "args": [
+                "build",
+                "-t",
+                "my-meetup-demo-app:latest",
+                "."
+            ],
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "docker launch",
+            "command": "docker",
+            "type": "shell",
+            "args": [
+                "run",
+                "--name",
+                "my-meetup-demo-app",
+                "-d",
+                "-p",
+                "8080:80",
+                "my-meetup-demo-app:latest"
+            ],
+            "group": "build",
+            "problemMatcher": []
         }
     ]
 }

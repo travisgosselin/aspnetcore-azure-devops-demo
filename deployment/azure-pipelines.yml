@@ -1,0 +1,45 @@
+name: $(Build.SourceBranchName)-$(Rev:r)
+
+trigger:
+  branches:
+    include:
+      - container-app
+  paths:
+    include:
+      - src
+      - tests
+
+pr:
+  branches:
+    include:
+      - master
+
+pool:
+  name: Azure Pipelines
+
+steps:
+- task: update-net-core-package-info@0
+  displayName: 'Update Version'
+  condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+
+- task: UpdateBuildNumber@0
+  displayName: 'update build number when pr'
+  inputs:
+    buildNumber: $(Build.SourceBranchName)-$(Build.BuildId)
+  condition: ne(variables['Build.SourceBranch'], 'refs/heads/master')
+
+- task: Docker@0
+  displayName: 'build image'
+  inputs:
+    azureSubscription: 'Free Trial (af5dba18-48a5-444e-bcbe-d9749bf60ec2)'
+    azureContainerRegistry: '{"loginServer":"meetupdemo.azurecr.io", "id" : "/subscriptions/af5dba18-48a5-444e-bcbe-d9749bf60ec2/resourceGroups/devops-demo/providers/Microsoft.ContainerRegistry/registries/meetupdemo"}'
+    includeLatestTag: true
+
+- task: Docker@0
+  displayName: 'push image'
+  inputs:
+    azureSubscription: 'Free Trial (af5dba18-48a5-444e-bcbe-d9749bf60ec2)'
+    azureContainerRegistry: '{"loginServer":"meetupdemo.azurecr.io", "id" : "/subscriptions/af5dba18-48a5-444e-bcbe-d9749bf60ec2/resourceGroups/devops-demo/providers/Microsoft.ContainerRegistry/registries/meetupdemo"}'
+    action: 'Push an image'
+    includeSourceTags: true
+    includeLatestTag: true
