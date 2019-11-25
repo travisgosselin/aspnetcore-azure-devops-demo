@@ -22,8 +22,8 @@ variables:
 - group: meetup-variables
 
 steps:
-- task: update-net-core-package-info@0
-  displayName: 'Update Version'
+- task: VersionDotNet@2
+  displayName: 'set version'
   condition: eq(variables['Build.SourceBranch'], 'refs/heads/container-app')
 
 - task: UpdateBuildNumber@0
